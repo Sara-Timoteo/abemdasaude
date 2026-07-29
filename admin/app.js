@@ -37,8 +37,12 @@ function showSection(name) {
 
 let _adminProfile = null; // { user_id, nome, cargo }
 
-async function checkSession() {
-  const { data: { session } } = await sb.auth.getSession();
+async function checkSession(sessaoConhecida = null) {
+  let session = sessaoConhecida;
+  if (!session) {
+    const { data } = await sb.auth.getSession();
+    session = data.session;
+  }
   if (!session) {
     showView('login');
     return false;
