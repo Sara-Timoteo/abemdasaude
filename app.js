@@ -592,9 +592,10 @@ async function saveResultado(row) {
 }
 
 $('resultado-next').addEventListener('click', () => {
-  const currentIdx = state.niveis.findIndex(n => n.id === state.currentLevel.id);
-  const next = state.niveis[currentIdx + 1];
-  if (next) startQuiz(next); else goToDashboard();
+  const idx = state.niveis.findIndex(n => n.id === state.currentLevel.id);
+  const seguinte = (idx >= 0) ? state.niveis[idx + 1] : null;
+  if (seguinte && seguinte.desbloqueado !== false) startQuiz(seguinte);
+  else goToNiveis();
 });
 
 $('resultado-home').addEventListener('click', () => goToDashboard());
