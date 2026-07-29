@@ -555,12 +555,30 @@ async function finishLevel() {
   $('resultado-detail').textContent = `${correct} de ${total} respostas corretas`;
   $('resultado-msg').textContent = msg;
 
-  // Mostra ou esconde botão "Próximo nível" consoante haja próximo
-  const currentIdx = state.niveis.findIndex(n => n.id === state.currentLevel.id);
-  const hasNext = currentIdx >= 0 && state.niveis[currentIdx + 1];
-  $('resultado-next').hidden = !hasNext;
+  // O botão do nível seguinte só nasce depois de a tentativa estar gravada:
+  // é essa gravação que desbloqueia o nível seguinte na base de dados.
+  $('resultado-next').hidden = true;
 
   showView('resultado');
+
+  try {
+    await saveResultado({
+      numero_beneficiario: userNumber(),
+      id_nivel: state.currentLevel.id,
+      nivel_nome: state.currentLevel.nome,
+      total_perguntas: total,
+      acertos: correct,
+      percentagem: percent,
+    });
+    await loadNiveis();
+  } catch (err) {
+    console.warn('Não foi possível guardar o resultado:', err);
+  }
+
+  const idx = state.niveis.findIndex(n => n.id === state.currentLevel.id);
+  const seguinte = (idx >= 0) ? state.niveis[idx + 1] : null;
+  $('resultado-next').hidden = !(seguinte && seguinte.desbloqueado !== false);
+}
 
   // Guardar resultado no Supabase em background (não bloqueia o ecrã)
   saveResultado({
