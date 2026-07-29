@@ -521,6 +521,7 @@ async function loadPontuacoes() {
 }
 
 async function applyPontuacoesFiltro() {
+  await carregarEstadosBeneficiarios();
   const wrap = $('pontuacoes-lista');
   const filtro = $('pontuacoes-filtro-nivel').value;
 
@@ -550,7 +551,7 @@ async function applyPontuacoesFiltro() {
         ${data.map((r, i) => `
           <tr class="clickable" data-numero="${escapeHTML(r.numero_beneficiario)}">
             <td class="num">${i + 1}</td>
-            <td>${escapeHTML(r.numero_beneficiario)}</td>
+          <td>${escapeHTML(etiquetaBeneficiario(r.numero_beneficiario))}</td>
             <td>${escapeHTML(r.nivel_nome || '—')}</td>
             <td class="num">${r.percentagem}% <small>(${r.acertos}/${r.total_perguntas})</small></td>
             <td>${formatDateShort(r.criado_em)}</td>
@@ -571,6 +572,7 @@ $('pontuacoes-filtro-nivel').addEventListener('change', applyPontuacoesFiltro);
 // ============================================
 
 async function loadRecompensas() {
+   await carregarEstadosBeneficiarios();
   const wrap = $('recompensas-lista');
   wrap.innerHTML = '<div class="loading">A carregar…</div>';
 
@@ -595,7 +597,7 @@ async function loadRecompensas() {
       <tbody>
         ${data.map(r => `
           <tr class="clickable" data-numero="${escapeHTML(r.numero_beneficiario)}">
-            <td><strong>${escapeHTML(r.numero_beneficiario)}</strong></td>
+           <td><strong>${escapeHTML(etiquetaBeneficiario(r.numero_beneficiario))}</strong></td>
             <td><span class="badge badge--${r.tipo}">${r.tipo === 'voucher' ? '🎟️ Voucher' : (r.imagem_url ? '🖼️ Imagem' : '🏅 Medalha')}</span></td>
             <td>${escapeHTML(r.titulo)}</td>
             <td>${
