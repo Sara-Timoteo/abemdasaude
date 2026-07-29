@@ -458,6 +458,33 @@ input:focus {
 }
 
 /* ============================================
+   NIVEIS — estado bloqueado (D2)
+   ============================================ */
+.nivel-item.is-locked {
+  background: var(--mint-bg);
+  border-color: var(--border);
+  border-style: dashed;
+  cursor: not-allowed;
+}
+.nivel-item.is-locked:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border);
+}
+.nivel-item.is-locked .nivel-number {
+  background: rgba(86, 111, 133, 0.12);
+  color: var(--ink-muted);
+  font-size: 16px;
+}
+.nivel-item.is-locked .nivel-name {
+  color: var(--ink-muted);
+}
+.nivel-item.is-locked .nivel-progress {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+/* ============================================
    ECRÃ QUIZ
    ============================================ */
 
