@@ -580,17 +580,6 @@ async function finishLevel() {
   $('resultado-next').hidden = !(seguinte && seguinte.desbloqueado !== false);
 }
 
-  // Guardar resultado no Supabase em background (não bloqueia o ecrã)
-  saveResultado({
-    numero_beneficiario: userNumber(),
-    id_nivel: state.currentLevel.id,
-    nivel_nome: state.currentLevel.nome,
-    total_perguntas: total,
-    acertos: correct,
-    percentagem: percent,
-  }).catch(err => console.warn('Não foi possível guardar o resultado:', err));
-}
-
 async function saveResultado(row) {
   if (!row.numero_beneficiario) return;
   const { error } = await sb.rpc('registar_tentativa', {
