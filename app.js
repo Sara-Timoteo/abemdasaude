@@ -270,6 +270,7 @@ async function loadDashboard() {
   // Pre-carregar pontuação enquanto carrega níveis em segundo plano
   $('stat-quizzes').textContent = '…';
   $('stat-media').textContent = '…';
+  $('stat-pontos').textContent = '…';
 
   const stats = await loadUserStats(num);
   $('stat-quizzes').textContent = stats.total;
@@ -277,12 +278,12 @@ async function loadDashboard() {
 
   // Carregar agendamentos e mostrar próxima toma
   await renderProximaToma();
-   renderRecompensaBanner().catch(() => {});
+  renderRecompensaBanner().catch(() => {});
+  renderPontos(num).catch(() => {});
 
   // Preload níveis em background para abrir mais depressa quando carregar no Iniciar Quiz
   loadNiveis().catch(() => {});
 }
-
 // ====== Aviso de recompensa nova (banner no painel) ======
 function recompensasVistasKey() {
   const n = userNumber() || 'anon';
