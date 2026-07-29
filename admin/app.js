@@ -135,8 +135,26 @@ $$('.admin-nav__btn').forEach(btn => {
 // ============================================
 // DASHBOARD
 // ============================================
+// Mapa PIN -> estado/pseudonimo, para os ecras que leem de resultados/recompensas
+// (essas tabelas guardam sempre o PIN real; o pseudonimo vive em Utilizadores)
+let _estadoPorPin = {};
 
+async function carregarEstadosBeneficiarios() {
+  const { data } = await sb.from('Utilizadores')
+    .select('numbeneficiario, estado, pseudonimo');
+  _estadoPorPin = {};
+  (data || []).forEach(u => { _estadoPorPin[u.numbeneficiario] = u; });
+}
+
+function etiquetaBeneficiario(pin) {
+  const u = _estadoPorPin[pin];
+  if (u && u.estado === 'consentimento_retirado') {
+    return u.pseudonimo || '(sem pseudónimo)';
+  }
+  return pin;
+}
 async function loadDashboard() {
+  await carregarEstadosBeneficiarios();
   // Stats globais em paralelo
   const [utilizadoresCount, resultadosAll, recompensasCount, top10, recRecentes] = await Promise.all([
     sb.from('Utilizadores').select('*', { count: 'exact', head: true }),
@@ -186,7 +204,7 @@ function renderTop10(rows) {
         ${rows.map((r, i) => `
           <tr class="clickable" data-numero="${escapeHTML(r.numero_beneficiario)}">
             <td class="num">${i + 1}</td>
-            <td>${escapeHTML(r.numero_beneficiario)}</td>
+            <td>${escapeHTML(etiquetaBeneficiario(r.numero_beneficiario))}</td>
             <td>${escapeHTML(r.nivel_nome || '—')}</td>
             <td class="num">${r.percentagem}% <small>(${r.acertos}/${r.total_perguntas})</small></td>
             <td>${formatDateShort(r.criado_em)}</td>
@@ -214,7 +232,7 @@ function renderRecompensasRecentes(rows) {
       <tbody>
         ${rows.map(r => `
           <tr class="clickable" data-numero="${escapeHTML(r.numero_beneficiario)}">
-            <td>${escapeHTML(r.numero_beneficiario)}</td>
+           <td>${escapeHTML(etiquetaBeneficiario(r.numero_beneficiario))}</td>
             <td><span class="badge badge--${r.tipo}">${r.tipo === 'voucher' ? '🎟️ Voucher' : (r.imagem_url ? '🖼️ Imagem' : '🏅 Medalha')}</span></td>
             <td>${escapeHTML(r.titulo)}</td>
             <td>${formatDateShort(r.criado_em)}</td>
