@@ -1062,17 +1062,17 @@ if ('serviceWorker' in navigator) {
 (function () {
   const FRASE = 'APAGAR DADOS DE TESTE';
   const alvo = document.getElementById('section-dashboard');
-  if (!alvo || document.getElementById('btn-limpar-teste')) return;
+if (!alvo || document.getElementById('btn-limpar-historico')) return;
 
   alvo.insertAdjacentHTML('beforeend', `
     <div class="admin-card" style="border:2px dashed #c00000;background:#fff6f6;margin-top:2rem">
-      <h3 style="color:#c00000">⚠️ Temporário — limpar base de TESTE</h3>
-      <p class="hint">Apaga <strong>todos os resultados de quiz, recompensas e consentimentos</strong>. Os beneficiários são <strong>mantidos</strong>, com registo limpo. Usar uma única vez, antes do lançamento real. Ação irreversível.</p>
-      <button id="btn-limpar-teste" class="btn btn--secondary btn--small" type="button">Limpar dados de teste…</button>
+      <<h3 style="color:#c00000">⚠️ Temporário — apagar TODO o histórico</h3>
+    <p class="hint">Apaga <strong>todos os resultados de quiz, recompensas e consentimentos</strong> — de <strong>todos</strong> os beneficiários, reais incluídos, e não apenas dos de teste. Os beneficiários são <strong>mantidos</strong>, com registo limpo. Para limpar só os fictícios, usa o botão em Utilizadores. Ação irreversível.</p>
+     <button id="btn-limpar-historico" class="btn btn--secondary btn--small" type="button">Apagar todo o histórico…</button>
     </div>
   `);
 
-  document.getElementById('btn-limpar-teste').addEventListener('click', async () => {
+  ddocument.getElementById('btn-limpar-historico').addEventListener('click', async () => {
     const escrito = prompt(
       'Esta acao e IRREVERSIVEL.\n\n' +
       'Apaga TODOS os resultados, recompensas e consentimentos.\n' +
@@ -1082,7 +1082,7 @@ if ('serviceWorker' in navigator) {
     if (escrito === null) return;
     if (escrito.trim() !== FRASE) { alert('A frase nao coincide. Acao cancelada.'); return; }
 
-    const b = document.getElementById('btn-limpar-teste');
+    const b = document.getElementById('btn-limpar-historico');
     b.disabled = true; b.textContent = 'A limpar…';
     try {
       const { data, error } = await sb.rpc('limpar_dados_de_teste', { p_confirmacao: escrito.trim() });
@@ -1097,7 +1097,7 @@ if ('serviceWorker' in navigator) {
     } catch (err) {
       alert('Erro: ' + (err.message || err));
     } finally {
-      b.disabled = false; b.textContent = 'Limpar dados de teste…';
+     b.disabled = false; b.textContent = 'Apagar todo o histórico…';
     }
   });
 })();
