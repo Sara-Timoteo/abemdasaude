@@ -250,7 +250,9 @@ async function loadUtilizadores() {
 function renderUtilizadores(rows) {
   const wrap = $('utilizadores-lista');
   if (rows.length === 0) {
-    wrap.innerHTML = '<div class="empty">Sem utilizadores. Toque em "+ Novo utilizador" para adicionar.</div>';
+    wrap.innerHTML = _utilizadoresAll.length > 0
+      ? '<div class="empty">Sem resultados para esta pesquisa ou filtro.</div>'
+      : '<div class="empty">Sem utilizadores. Toque em "+ Novo utilizador" para adicionar.</div>';
     return;
   }
   wrap.innerHTML = `
