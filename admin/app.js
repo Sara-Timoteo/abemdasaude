@@ -368,7 +368,7 @@ async function goToDetalheUtilizador(numero) {
   wrap.innerHTML = '<div class="loading">A carregar…</div>';
 
   // Carregar tudo em paralelo
-  const [user, resultados, recompensas] = await Promise.all([
+  const [user, resultados, recompensas, pontosRes] = await Promise.all([
     sb.from('Utilizadores')
       .select('numbeneficiario, anonascimento, estado, pseudonimo')
       .eq('numbeneficiario', numero)
@@ -381,6 +381,7 @@ async function goToDetalheUtilizador(numero) {
       .select('*')
       .eq('numero_beneficiario', numero)
       .order('criado_em', { ascending: false }),
+    sb.rpc('get_pontos', { p_pin: numero }),
   ]);
 
   if (!user.data) {
@@ -391,6 +392,7 @@ async function goToDetalheUtilizador(numero) {
   const u = user.data;
   const res = resultados.data || [];
   const rec = recompensas.data || [];
+  const pts = (pontosRes.data && pontosRes.data[0]) || { pontos: 0, respondidas: 0 };
   const totalQuizzes = res.length;
   const media = totalQuizzes > 0
     ? Math.round(res.reduce((s, r) => s + (r.percentagem || 0), 0) / totalQuizzes)
@@ -426,6 +428,10 @@ async function goToDetalheUtilizador(numero) {
       <div class="stat-card">
         <span class="stat-card__label">Recompensas</span>
         <span class="stat-card__value">${rec.length}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__label">Pontos</span>
+        <span class="stat-card__value">${pts.pontos} <small>de ${pts.respondidas} respostas</small></span>
       </div>
     </div>
 
