@@ -203,7 +203,7 @@ input, select, textarea, button { font-size: inherit; }
 .admin-main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 28px;
+  padding: 32px 28px 96px;
 }
 
 .admin-section h2 {
