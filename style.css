@@ -851,6 +851,9 @@ input:focus {
   gap: 12px;
   margin-bottom: 26px;
 }
+.stat-card--largo {
+  grid-column: 1 / -1;
+}
 .stat-card {
   background: var(--surface);
   padding: 18px 16px;
