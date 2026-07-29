@@ -371,28 +371,39 @@ function renderNiveis() {
     const total = n.total_perguntas || 0;
     const feitas = n.respondidas || 0;
     const melhor = (n.melhor_percentagem != null) ? ` · melhor ${n.melhor_percentagem}%` : '';
-    const progresso = n.esgotado
-      ? `Concluído${melhor}`
-      : `${feitas} de ${total} respondidas${melhor}`;
+    const nome = n.nome || `Nível ${i + 1}`;
+    const bloqueado = (n.desbloqueado === false);
+    const anterior = (i > 0 && state.niveis[i - 1])
+      ? (state.niveis[i - 1].nome || `Nível ${i}`)
+      : '';
+    const progresso = bloqueado
+      ? (anterior ? `Conclua o ${anterior} para desbloquear` : 'Ainda bloqueado')
+      : (n.esgotado ? `Concluído${melhor}` : `${feitas} de ${total} respondidas${melhor}`);
+    const classes = 'nivel-item'
+      + (n.esgotado && !bloqueado ? ' is-done' : '')
+      + (bloqueado ? ' is-locked' : '');
+    const marca = bloqueado ? '🔒' : (n.esgotado ? '✓' : i + 1);
     return `
-    <li class="nivel-item${n.esgotado ? ' is-done' : ''}" tabindex="0" role="button"
+    <li class="${classes}" tabindex="0" role="button"${bloqueado ? ' aria-disabled="true"' : ''}
         data-nivel-id="${n.id}"
-        data-nivel-nome="${escapeHTML(n.nome || `Nível ${i+1}`)}">
-      <span class="nivel-number">${n.esgotado ? '✓' : i + 1}</span>
+        data-nivel-nome="${escapeHTML(nome)}"
+        data-bloqueado="${bloqueado ? '1' : '0'}">
+      <span class="nivel-number" aria-hidden="true">${marca}</span>
       <span class="nivel-body">
-        <span class="nivel-name">${escapeHTML(n.nome || `Nível ${i+1}`)}</span>
+        <span class="nivel-name">${escapeHTML(nome)}</span>
         <span class="nivel-progress">${progresso}</span>
       </span>
-      <span class="nivel-arrow" aria-hidden="true">→</span>
+      <span class="nivel-arrow" aria-hidden="true">${bloqueado ? '' : '→'}</span>
     </li>`;
   }).join('');
   list.querySelectorAll('.nivel-item').forEach(item => {
+    if (item.dataset.bloqueado === '1') return;
     const open = () => startQuiz({
       id: parseInt(item.dataset.nivelId, 10),
       nome: item.dataset.nivelNome,
     });
     item.addEventListener('click', open);
-   item.addEventListener('keydown', (e) => {
+    item.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
     });
   });
