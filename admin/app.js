@@ -106,8 +106,7 @@ $('login-form').addEventListener('submit', async (e) => {
     showLoginError(msg);
     return;
   }
-  console.log('Login ok, session:', data.session);
-  await checkSession();
+ await checkSession(data.session);
 });
 
 $('admin-logout').addEventListener('click', async () => {
