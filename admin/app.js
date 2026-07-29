@@ -1072,7 +1072,7 @@ if (!alvo || document.getElementById('btn-limpar-historico')) return;
     </div>
   `);
 
-  ddocument.getElementById('btn-limpar-historico').addEventListener('click', async () => {
+  document.getElementById('btn-limpar-historico').addEventListener('click', async () => {
     const escrito = prompt(
       'Esta acao e IRREVERSIVEL.\n\n' +
       'Apaga TODOS os resultados, recompensas e consentimentos.\n' +
