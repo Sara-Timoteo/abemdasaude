@@ -236,7 +236,7 @@ async function loadUtilizadores() {
   wrap.innerHTML = '<div class="loading">A carregar…</div>';
 
   const { data, error } = await sb.from('Utilizadores')
-    .select('numbeneficiario, anonascimento')
+    .select('numbeneficiario, anonascimento, estado, pseudonimo')
     .order('numbeneficiario');
 
   if (error) {
@@ -255,15 +255,31 @@ function renderUtilizadores(rows) {
   }
   wrap.innerHTML = `
     <table class="admin-table">
-      <thead><tr><th>Número de beneficiário</th><th>Ano nascimento</th><th></th></tr></thead>
+      <thead>
+        <tr>
+          <th>Beneficiário</th>
+          <th>Ano nascimento</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
       <tbody>
-        ${rows.map(u => `
+        ${rows.map(u => {
+          const retirado = (u.estado === 'consentimento_retirado');
+          const etiqueta = retirado
+            ? (u.pseudonimo || '(sem pseudónimo)')
+            : u.numbeneficiario;
+          const badge = retirado
+            ? '<span class="badge badge--retirado">Consentimento retirado</span>'
+            : '<span class="badge badge--ativo">Ativo</span>';
+          return `
           <tr class="clickable" data-numero="${escapeHTML(u.numbeneficiario)}">
-            <td><strong>${escapeHTML(u.numbeneficiario)}</strong></td>
-            <td>${u.anonascimento}</td>
+            <td><strong>${escapeHTML(etiqueta)}</strong></td>
+            <td>${retirado ? '—' : u.anonascimento}</td>
+            <td>${badge}</td>
             <td style="text-align:right">→</td>
-          </tr>
-        `).join('')}
+          </tr>`;
+        }).join('')}
       </tbody>
     </table>
   `;
@@ -276,11 +292,11 @@ $('utilizadores-search').addEventListener('input', (e) => {
   const q = e.target.value.trim().toLowerCase();
   if (!q) { renderUtilizadores(_utilizadoresAll); return; }
   const filtrados = _utilizadoresAll.filter(u =>
-    String(u.numbeneficiario).toLowerCase().includes(q)
+    String(u.numbeneficiario).toLowerCase().includes(q) ||
+    String(u.pseudonimo || '').toLowerCase().includes(q)
   );
   renderUtilizadores(filtrados);
 });
-
 // ============================================
 // DETALHE DO UTILIZADOR
 // ============================================
