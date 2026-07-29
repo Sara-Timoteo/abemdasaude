@@ -246,7 +246,6 @@ async function loadUtilizadores() {
   _utilizadoresAll = data || [];
   aplicarFiltrosUtilizadores();
 }
-}
 
 function renderUtilizadores(rows) {
   const wrap = $('utilizadores-lista');
@@ -441,6 +440,7 @@ async function goToDetalheUtilizador(numero) {
       }
     });
   }
+}
 
 function renderRecompensaCard(r) {
   const dataStr = formatDateShort(r.criado_em);
