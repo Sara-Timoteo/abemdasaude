@@ -715,7 +715,7 @@ body.a11y-high-contrast .detalhe-header .badge {
     flex-wrap: nowrap;
   }
   .admin-nav__btn { white-space: nowrap; }
-  .admin-main { padding: 20px 16px; }
+  .admin-main { padding: 20px 16px 80px; }
   .admin-section h2 { font-size: 22px; }
   .stat-card__value { font-size: 24px; }
 }
