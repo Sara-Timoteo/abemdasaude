@@ -327,6 +327,33 @@ function aplicarFiltrosUtilizadores() {
 
 $('utilizadores-search').addEventListener('input', aplicarFiltrosUtilizadores);
 $('utilizadores-filtro-estado').addEventListener('change', aplicarFiltrosUtilizadores);
+$('btn-limpar-teste').addEventListener('click', async () => {
+  const ok = confirm('Apagar TODOS os dados de teste (numeros comecados por TESTE-)?\n\nOs dados reais nao sao afetados.');
+  if (!ok) return;
+
+  const b = $('btn-limpar-teste');
+  const out = $('limpeza-teste-resultado');
+  b.disabled = true; b.textContent = 'A limpar…';
+
+  try {
+    const { data, error } = await sb.rpc('limpar_beneficiarios_de_teste');
+    if (error) throw error;
+    const d = data || {};
+    out.hidden = false;
+    out.textContent = 'Apagados: ' + (d.utilizadores_apagados || 0) + ' beneficiarios, '
+      + (d.respostas_apagadas || 0) + ' respostas, '
+      + (d.resultados_apagados || 0) + ' resultados, '
+      + (d.recompensas_apagadas || 0) + ' recompensas, '
+      + (d.consentimentos_apagados || 0) + ' consentimentos.';
+    announce('Dados de teste apagados.');
+    await loadUtilizadores();
+  } catch (err) {
+    out.hidden = false;
+    out.textContent = 'Erro: ' + (err.message || err);
+  } finally {
+    b.disabled = false; b.textContent = 'Limpar dados de teste';
+  }
+});
 // ============================================
 // DETALHE DO UTILIZADOR
 // ============================================
