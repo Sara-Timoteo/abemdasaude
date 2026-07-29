@@ -176,8 +176,23 @@ loginForm.addEventListener('submit', async (e) => {
       p_numero: numero, p_ano: ano,
     });
     if (error) throw error;
-    if (!data || data.length === 0) {
-      showLoginError('Número de beneficiário ou ano de nascimento inválidos.');
+  if (!data || data.length === 0) {
+      // Distinguir "dados errados" de "consentimento retirado".
+      // So revela o estado a quem acerta no numero E no ano (as mesmas
+      // credenciais que dariam acesso normal) — nao permite enumeracao.
+      // TEXTO PROVISORIO: a aguardar redacao final da Dignitude.
+      let retirado = false;
+      try {
+        const r = await sb.rpc('consentimento_retirado', {
+          p_numero: numero, p_ano: ano,
+        });
+        retirado = (r.data === true);
+      } catch (err) {
+        console.warn('Nao foi possivel verificar o estado do consentimento:', err);
+      }
+      showLoginError(retirado
+        ? 'O acesso está suspenso porque o consentimento foi retirado. Para voltar a usar a aplicação, contacte a Dignitude.'
+        : 'Número de beneficiário ou ano de nascimento inválidos.');
       return;
     }
 
