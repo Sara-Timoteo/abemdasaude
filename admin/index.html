@@ -115,6 +115,16 @@
           <button id="utilizador-novo" class="btn btn--primary btn--small">+ Novo utilizador</button>
         </div>
        <input id="utilizadores-search" type="search" placeholder="Procurar por número ou pseudónimo…" class="admin-search">
+        <div class="filtros">
+          <label>
+            <span>Estado</span>
+            <select id="utilizadores-filtro-estado">
+              <option value="">Todos</option>
+              <option value="ativo">Ativos</option>
+              <option value="consentimento_retirado">Retirados</option>
+            </select>
+          </label>
+        </div>
         <div id="utilizadores-lista" class="admin-table-wrap">A carregar…</div>
       </section>
 
