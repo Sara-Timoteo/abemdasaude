@@ -323,7 +323,7 @@ async function goToDetalheUtilizador(numero) {
   // Carregar tudo em paralelo
   const [user, resultados, recompensas] = await Promise.all([
     sb.from('Utilizadores')
-      .select('numbeneficiario, anonascimento')
+      .select('numbeneficiario, anonascimento, estado, pseudonimo')
       .eq('numbeneficiario', numero)
       .maybeSingle(),
     sb.from('resultados')
@@ -349,13 +349,22 @@ async function goToDetalheUtilizador(numero) {
     ? Math.round(res.reduce((s, r) => s + (r.percentagem || 0), 0) / totalQuizzes)
     : 0;
 
+  const retirado = (u.estado === 'consentimento_retirado');
+  const etiqueta = retirado ? (u.pseudonimo || '(sem pseudónimo)') : u.numbeneficiario;
+
   wrap.innerHTML = `
     <div class="detalhe-header">
       <div>
-        <div class="detalhe-numero">${escapeHTML(u.numbeneficiario)}</div>
-        <div class="detalhe-info">Ano de nascimento: ${u.anonascimento}</div>
+        <div class="detalhe-numero">${escapeHTML(etiqueta)}</div>
+        ${retirado
+          ? '<div class="detalhe-info"><span class="badge badge--retirado">Consentimento retirado</span></div>'
+          : `<div class="detalhe-info">Ano de nascimento: ${u.anonascimento}</div>`
+        }
       </div>
-      <button id="atribuir-rec" class="btn btn--primary btn--small">+ Atribuir recompensa</button>
+      ${retirado
+        ? ''
+        : '<button id="atribuir-rec" class="btn btn--primary btn--small">+ Atribuir recompensa</button>'
+      }
     </div>
 
     <div class="stats-grid stats-grid--admin">
@@ -401,34 +410,37 @@ async function goToDetalheUtilizador(numero) {
     </div>
   `;
 
-  $('atribuir-rec').addEventListener('click', () => openModalRecompensa(numero));
+  if (!retirado) {
+    $('atribuir-rec').addEventListener('click', () => openModalRecompensa(numero));
+  }
 
-  // === A1.2 — Pseudonimização RGPD (ação de admin, irreversível) ===
-  wrap.insertAdjacentHTML('beforeend', `
-    <div class="admin-card" style="border:1px solid #c00000;background:#fff6f6;margin-top:1rem">
-      <h3 style="color:#c00000">Zona sensível — RGPD</h3>
-      <p class="hint">Pseudonimizar substitui o número de beneficiário por um pseudónimo e retira o consentimento, mantendo os quizzes e recompensas sem identificação. Ação irreversível.</p>
-      <button id="btn-pseudonimizar" class="btn btn--secondary btn--small">Pseudonimizar a pedido do beneficiário</button>
-    </div>
-  `);
+  // === Fase 5 — Consentimento retirado: reativar acesso ===
+  if (retirado) {
+    wrap.insertAdjacentHTML('beforeend', `
+      <div class="admin-card" style="margin-top:1rem">
+        <h3>Consentimento retirado</h3>
+        <p class="hint">O acesso à app está suspenso e o número de beneficiário está oculto no painel. Os quizzes e as recompensas foram mantidos. Reativar devolve apenas o acesso — o consentimento volta a ser pedido à pessoa na próxima entrada na app.</p>
+        <button id="btn-reativar" class="btn btn--primary btn--small">Reativar acesso</button>
+      </div>
+    `);
 
-  $('btn-pseudonimizar').addEventListener('click', async () => {
-    const escrito = prompt('Esta acao e IRREVERSIVEL. Para confirmar, escreva o numero de beneficiario exatamente:\n\n' + numero);
-    if (escrito === null) return;
-    if (escrito.trim() !== numero) { alert('O numero nao coincide. Acao cancelada.'); return; }
-    const b = $('btn-pseudonimizar');
-    b.disabled = true; b.textContent = 'A pseudonimizar…';
-    try {
-      const { data, error } = await sb.rpc('pseudonimizar_beneficiario', { p_pin: numero });
-      if (error) throw error;
-      alert('Feito. Novo pseudonimo: ' + data + '\nOs quizzes e recompensas foram mantidos, sem identificacao.');
-      showSection('utilizadores');
-    } catch (err) {
-      alert('Erro: ' + (err.message || err));
-      b.disabled = false; b.textContent = 'Pseudonimizar a pedido do beneficiário';
-    }
-  });
-}
+    $('btn-reativar').addEventListener('click', async () => {
+      const ok = confirm('Reativar o acesso deste beneficiário?\n\nO consentimento será pedido de novo à pessoa na próxima entrada na app.');
+      if (!ok) return;
+      const b = $('btn-reativar');
+      b.disabled = true; b.textContent = 'A reativar…';
+      try {
+        const { error } = await sb.rpc('reativar_beneficiario', { p_pin: numero });
+        if (error) throw error;
+        announce('Beneficiário reativado.');
+        await loadUtilizadores();
+        await goToDetalheUtilizador(numero);
+      } catch (err) {
+        alert('Erro: ' + (err.message || err));
+        b.disabled = false; b.textContent = 'Reativar acesso';
+      }
+    });
+  }
 
 function renderRecompensaCard(r) {
   const dataStr = formatDateShort(r.criado_em);
