@@ -333,6 +333,21 @@ async function loadUserStats(numero) {
     : 0;
   return { total, media };
 }
+// ====== Pontos acumulados (cartao do dashboard) ======
+// 1 ponto = 1 resposta certa, contada uma unica vez por pergunta.
+// A conta vive toda na BD (get_pontos); aqui so se mostra o numero.
+async function renderPontos(numero) {
+  const el = $('stat-pontos');
+  if (!el) return;
+  if (!numero) { el.textContent = '—'; return; }
+  const { data, error } = await sb.rpc('get_pontos', { p_pin: numero });
+  if (error || !data || !data.length) {
+    console.warn('Erro ao carregar pontos:', error);
+    el.textContent = '—';
+    return;
+  }
+  el.textContent = data[0].pontos;
+}
 
 $('dashboard-quiz').addEventListener('click', () => goToNiveis());
 $('dashboard-medicamentos').addEventListener('click', () => goToMedicamentos());
