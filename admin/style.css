@@ -335,6 +335,15 @@ input, select, textarea, button { font-size: inherit; }
   color: var(--warning);
 }
 
+.admin-table .badge--ativo {
+  background: rgba(138, 202, 201, 0.20);
+  color: var(--mint-dark);
+}
+.admin-table .badge--retirado {
+  background: rgba(166, 43, 56, 0.12);
+  color: #A62B38;
+}
+
 /* ============================================
    PESQUISA + FILTROS
    ============================================ */
