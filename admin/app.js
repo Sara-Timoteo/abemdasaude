@@ -290,15 +290,22 @@ function renderUtilizadores(rows) {
   });
 }
 
-$('utilizadores-search').addEventListener('input', (e) => {
-  const q = e.target.value.trim().toLowerCase();
-  if (!q) { renderUtilizadores(_utilizadoresAll); return; }
-  const filtrados = _utilizadoresAll.filter(u =>
-    String(u.numbeneficiario).toLowerCase().includes(q) ||
-    String(u.pseudonimo || '').toLowerCase().includes(q)
-  );
+function aplicarFiltrosUtilizadores() {
+  const q = ($('utilizadores-search').value || '').trim().toLowerCase();
+  const estado = $('utilizadores-filtro-estado').value;
+
+  const filtrados = _utilizadoresAll.filter(u => {
+    if (estado && (u.estado || 'ativo') !== estado) return false;
+    if (!q) return true;
+    return String(u.numbeneficiario).toLowerCase().includes(q)
+        || String(u.pseudonimo || '').toLowerCase().includes(q);
+  });
+
   renderUtilizadores(filtrados);
-});
+}
+
+$('utilizadores-search').addEventListener('input', aplicarFiltrosUtilizadores);
+$('utilizadores-filtro-estado').addEventListener('change', aplicarFiltrosUtilizadores);
 // ============================================
 // DETALHE DO UTILIZADOR
 // ============================================
