@@ -244,7 +244,8 @@ async function loadUtilizadores() {
     return;
   }
   _utilizadoresAll = data || [];
-  renderUtilizadores(_utilizadoresAll);
+  aplicarFiltrosUtilizadores();
+}
 }
 
 function renderUtilizadores(rows) {
