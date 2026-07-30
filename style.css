@@ -2328,6 +2328,15 @@ input:focus {
   margin-top: 4px;
 }
 
+.recompensa-item__instrucao {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink);
+  font-weight: 600;
+}
+
 /* ============================================
    FASE 4 — Acessibilidade
    ============================================ */
