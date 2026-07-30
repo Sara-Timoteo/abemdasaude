@@ -520,6 +520,7 @@ function renderRecompensaCard(r) {
         <div class="recompensa-card__titulo">${escapeHTML(r.titulo)}</div>
         ${r.descricao ? `<div class="recompensa-card__meta">${escapeHTML(r.descricao)}</div>` : ''}
         ${r.voucher_codigo ? `<span class="recompensa-card__codigo">${escapeHTML(r.voucher_codigo)}</span>` : ''}
+        ${r.tipo === 'voucher' ? `<span class="recompensa-card__instrucao">Utilize este voucher no nosso parceiro</span>` : ''}
         <div class="recompensa-card__meta">Atribuída em ${dataStr}</div>
       </div>
     </div>
