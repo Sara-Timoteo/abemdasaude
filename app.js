@@ -823,6 +823,7 @@ const { data, error } = await sb.rpc('get_recompensas', { p_pin: userNumber() })
           <div class="recompensa-item__titulo">${escapeHTML(r.titulo)}</div>
           ${r.descricao ? `<div class="recompensa-item__desc">${escapeHTML(r.descricao)}</div>` : ''}
           ${r.voucher_codigo ? `<span class="recompensa-item__codigo">${escapeHTML(r.voucher_codigo)}</span>` : ''}
+          ${r.tipo === 'voucher' ? `<span class="recompensa-item__instrucao">Utilize este voucher no nosso parceiro</span>` : ''}
           <div class="recompensa-item__data">Atribuída em ${dataStr}</div>
         </div>
       </li>
