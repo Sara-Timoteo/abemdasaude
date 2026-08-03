@@ -99,7 +99,7 @@ $('login-form').addEventListener('submit', async (e) => {
     console.error('Login error:', error);
     let msg = error.message || 'Erro desconhecido';
     if (msg.toLowerCase().includes('email not confirmed')) {
-     msg = 'Email não está confirmado no Supabase. Vai a Authentication → Users e ativa "Auto Confirm" para este utilizador.';
+     msg = 'Email não está confirmado no Supabase. Vá a Authentication → Users e ative "Auto Confirm" para este utilizador.';
     } else if (msg.toLowerCase().includes('invalid login credentials')) {
       msg = 'Email ou password errados. Verifique os dois (cuidado com espaços e maiúsculas).';
     }
