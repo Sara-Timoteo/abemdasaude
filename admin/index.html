@@ -127,6 +127,13 @@
         </div>
         <div id="utilizadores-lista" class="admin-table-wrap">A carregar…</div>
         <div class="admin-card" style="margin-top:1.5rem">
+          <h3>Importar beneficiários do Google Sheets</h3>
+          <p class="hint">Os números de beneficiário são geridos numa folha privada. Depois de a editar, carregue em <strong>Pré-visualizar</strong> para ver o que vai ser importado e só depois confirme. A importação atualiza e acrescenta — <strong>nunca apaga</strong>.</p>
+          <button id="benef-preview" class="btn btn--primary">Pré-visualizar importação</button>
+          <div id="benef-resultado" style="margin-top:14px" hidden></div>
+          <button id="benef-confirmar" class="btn btn--primary" style="margin-top:12px" hidden>Confirmar e importar</button>
+        </div>
+        <div class="admin-card" style="margin-top:1.5rem">
           <h3>Manutenção — dados de teste</h3>
           <p class="hint">Apaga todos os beneficiários cujo número comece por <strong>TESTE-</strong>, e ainda os respetivos quizzes, respostas, recompensas e consentimentos. Os dados reais não são afetados.</p>
           <button id="btn-limpar-teste" class="btn btn--secondary btn--small">Limpar dados de teste</button>
