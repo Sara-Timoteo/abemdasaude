@@ -175,7 +175,7 @@ form.addEventListener('submit', async (e) => {
 
   } catch (err) {
     console.error(err);
-    showError('Erro inesperado. Tenta de novo.');
+    showError('Erro inesperado. Tente de novo.');
     setLoading(false);
   }
 });
