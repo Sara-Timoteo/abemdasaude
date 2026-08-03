@@ -2192,7 +2192,7 @@ async function exportarCSV(tipo) {
     filename = `glicemia-${num}-${dataStr}.csv`;
   } else if (tipo === 'medicacao') {
     const dados = await dadosAdesao(periodo);
-    headers = ['Data', 'Hora prevista', 'Medicamento', 'Dose', 'Estado', 'Hora real'];
+    headers = ['Data', 'Hora prevista', 'Medicamento', 'Posologia', 'Estado', 'Hora real'];
     rows = dados.map(d => [d.data, d.hora_prevista, d.medicamento, d.dose, d.estado, d.hora_real]);
     filename = `adesao-${num}-${dataStr}.csv`;
   } else {
@@ -2284,7 +2284,7 @@ async function renderRelatorio(tipo) {
       };
       html = resumo + `<table class="relatorio-table">
         <thead><tr>
-          <th>Data</th><th>Hora</th><th>Medicamento</th><th>Dose</th><th>Estado</th><th>Hora real</th>
+          <th>Data</th><th>Hora</th><th>Medicamento</th><th>Posologia</th><th>Estado</th><th>Hora real</th>
         </tr></thead>
         <tbody>${dados.map(d => `
           <tr>
