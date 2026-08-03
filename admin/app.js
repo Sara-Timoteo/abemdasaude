@@ -101,7 +101,7 @@ $('login-form').addEventListener('submit', async (e) => {
     if (msg.toLowerCase().includes('email not confirmed')) {
      msg = 'Email não está confirmado no Supabase. Vai a Authentication → Users e ativa "Auto Confirm" para este utilizador.';
     } else if (msg.toLowerCase().includes('invalid login credentials')) {
-      msg = 'Email ou password errados. Verifica os dois (cuidado com espaços e maiúsculas).';
+      msg = 'Email ou password errados. Verifique os dois (cuidado com espaços e maiúsculas).';
     }
     showLoginError(msg);
     return;
@@ -1229,7 +1229,7 @@ async function preverImportacao() {
     conf.hidden = (niveis.length === 0 && questoes.length === 0);
   } catch (e) {
     out.innerHTML = '<p style="color:#D8394A;font-weight:600">Não foi possível ler a folha: ' + escapeHTML(e.message) + '.<br>' +
-      'Confirma que as duas tabs estão publicadas como CSV (Ficheiro → Partilhar → Publicar na Web).</p>';
+      'Confirme que as duas tabs estão publicadas como CSV (Ficheiro → Partilhar → Publicar na Web).</p>';
   } finally {
     btn.disabled = false;
     btn.textContent = orig;
