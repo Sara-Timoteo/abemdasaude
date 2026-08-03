@@ -1265,3 +1265,98 @@ const _cp = $('conteudo-preview');
 if (_cp) _cp.addEventListener('click', preverImportacao);
 const _cc = $('conteudo-confirmar');
 if (_cc) _cc.addEventListener('click', confirmarImportacao);
+
+/* ====== Importar beneficiários da folha privada (Edge Function) ====== */
+
+let _benefBuffer = null;
+
+async function preverBeneficiarios() {
+  const btn  = $('benef-preview');
+  const out  = $('benef-resultado');
+  const conf = $('benef-confirmar');
+  conf.hidden = true;
+  _benefBuffer = null;
+  btn.disabled = true;
+  const orig = btn.textContent;
+  btn.textContent = 'A ler a folha…';
+  out.hidden = false;
+  out.innerHTML = 'A ler a folha privada…';
+
+  try {
+    const { data, error } = await sb.functions.invoke('ler-folha-beneficiarios', { body: {} });
+    if (error) throw error;
+    if (!data || data.ok !== true) throw new Error((data && data.erro) || 'Resposta inesperada da função.');
+
+    const linhas = data.linhas || [];
+    _benefBuffer = linhas;
+
+    if (linhas.length === 0) {
+      out.innerHTML = '<p style="color:#D8394A;font-weight:600">A folha não tem linhas para importar.</p>';
+      return;
+    }
+
+    let html = '<p><strong>' + linhas.length + '</strong> linha(s) na folha, prontas a rever.</p>';
+    html += '<div class="admin-table-wrap"><table class="admin-table"><thead><tr>' +
+            '<th>Linha</th><th>Número</th><th>Ano</th></tr></thead><tbody>';
+    linhas.forEach((l, i) => {
+      html += '<tr><td>' + (i + 2) + '</td><td>' + escapeHTML(l.numbeneficiario) +
+              '</td><td>' + escapeHTML(l.anonascimento) + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    out.innerHTML = html;
+    conf.hidden = false;
+  } catch (e) {
+    out.innerHTML = '<p style="color:#D8394A;font-weight:600">Não foi possível ler a folha: ' +
+      escapeHTML(e.message) + '</p>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = orig;
+  }
+}
+
+async function confirmarBeneficiarios() {
+  if (!_benefBuffer) return;
+  const conf = $('benef-confirmar');
+  const out  = $('benef-resultado');
+  conf.disabled = true;
+  const orig = conf.textContent;
+  conf.textContent = 'A importar…';
+
+  try {
+    const { data, error } = await sb.rpc('importar_beneficiarios', {
+      p_lista:  _benefBuffer,
+      p_origem: 'google-sheet',
+    });
+    if (error) throw error;
+
+    let html = '<p style="color:#1F7A6E;font-weight:600">✓ ' + data.inseridos + ' inserido(s), ' +
+      data.atualizados + ' atualizado(s), ' + data.ignorados + ' ignorado(s) — de ' +
+      data.total_recebidos + ' recebido(s).</p>';
+
+    const det = data.detalhe_ignorados || [];
+    if (det.length) {
+      html += '<p style="color:#D8394A;font-weight:600;margin-top:10px">Linhas ignoradas:</p>' +
+        '<ul style="margin:6px 0;padding-left:20px;color:#D8394A">' +
+        det.map(function (d) {
+          return '<li>Linha ' + (d.linha + 1) + ': ' +
+                 escapeHTML(d.numbeneficiario || '(vazio)') + ' — ' + escapeHTML(d.motivo) + '</li>';
+        }).join('') + '</ul>';
+    }
+
+    out.innerHTML = html;
+    conf.hidden = true;
+    _benefBuffer = null;
+    loadUtilizadores();
+  } catch (e) {
+    out.innerHTML += '<p style="color:#D8394A;font-weight:600">Erro ao importar: ' +
+      escapeHTML(e.message) + '</p>';
+  } finally {
+    conf.disabled = false;
+    conf.textContent = orig;
+  }
+}
+
+const _bp = $('benef-preview');
+if (_bp) _bp.addEventListener('click', preverBeneficiarios);
+const _bc = $('benef-confirmar');
+if (_bc) _bc.addEventListener('click', confirmarBeneficiarios);
