@@ -52,7 +52,7 @@ form.addEventListener('submit', async (e) => {
       // Não revelamos se o email existe ou não (anti-enumeração)
       // Mas mostramos erros técnicos genuínos (rate limit, etc.)
       if (error.message.toLowerCase().includes('rate limit')) {
-        showError('Demasiados pedidos. Aguarda alguns minutos e tenta de novo.');
+        showError('Demasiados pedidos. Aguarde alguns minutos e tente de novo.');
         setLoading(false);
         return;
       } else {
@@ -68,7 +68,7 @@ form.addEventListener('submit', async (e) => {
 
   } catch (err) {
     console.error(err);
-    showError('Erro inesperado. Tenta de novo.');
+    showError('Erro inesperado. Tente de novo.');
   } finally {
     setLoading(false);
   }
