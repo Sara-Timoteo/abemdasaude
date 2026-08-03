@@ -145,8 +145,25 @@ function sensitiveStorageKeys() {
 const loginForm  = $('login-form');
 const loginError = $('login-error');
 
+let _loginEmCurso = false;
+
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (_loginEmCurso) return;
+  _loginEmCurso = true;
+  const btnEntrar = loginForm.querySelector('button[type="submit"]');
+  if (btnEntrar) btnEntrar.disabled = true;
+  try {
+    await _processarLogin();
+  } finally {
+    _loginEmCurso = false;
+    if (btnEntrar) btnEntrar.disabled = false;
+  }
+});
+
+// Corpo do login. Chamado so pelo handler acima, que garante uma
+// execucao de cada vez (guarda _loginEmCurso + botao desativado).
+async function _processarLogin() {
   loginError.hidden = true;
 
   const numero = loginForm.numero.value.trim();
@@ -235,7 +252,7 @@ loginForm.addEventListener('submit', async (e) => {
     console.error('Login error:', err);
     showLoginError('Erro ao verificar credenciais. Tente novamente.');
   }
-});
+}
 
 function showLoginError(msg) {
   loginError.textContent = msg;
