@@ -197,7 +197,7 @@ async function _processarLogin() {
       // Distinguir "dados errados" de "consentimento retirado".
       // So revela o estado a quem acerta no numero E no ano (as mesmas
       // credenciais que dariam acesso normal) — nao permite enumeracao.
-      // TEXTO PROVISORIO: a aguardar redacao final da Dignitude.
+      //Texto final da Dignitude (2026-08-03).
       let retirado = false;
       try {
         const r = await sb.rpc('consentimento_retirado', {
@@ -207,9 +207,11 @@ async function _processarLogin() {
       } catch (err) {
         console.warn('Nao foi possivel verificar o estado do consentimento:', err);
       }
-      showLoginError(retirado
-        ? 'O acesso está suspenso porque o consentimento foi retirado. Para voltar a usar a aplicação, contacte a Dignitude.'
-        : 'Número de beneficiário ou ano de nascimento inválidos.');
+      if (retirado) {
+        showLoginError('O seu acesso está bloqueado. Para voltar a usar a aplicação, contacte a Associação Dignitude através do e-mail: ', 'geral@dignitude.org');
+      } else {
+        showLoginError('Número de beneficiário ou ano de nascimento inválidos.');
+      }
       return;
     }
 
@@ -254,8 +256,14 @@ async function _processarLogin() {
   }
 }
 
-function showLoginError(msg) {
+function showLoginError(msg, email) {
   loginError.textContent = msg;
+  if (email) {
+    const a = document.createElement('a');
+    a.href = 'mailto:' + email;
+    a.textContent = email;
+    loginError.appendChild(a);
+  }
   loginError.hidden = false;
 }
 
