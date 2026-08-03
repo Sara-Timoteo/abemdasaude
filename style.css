@@ -272,6 +272,14 @@ input:focus {
   border: 1px solid rgba(216, 57, 74, 0.20);
 }
 
+/* Link dentro da caixa de erro (e-mail da Dignitude no acesso bloqueado).
+   Herda a cor da caixa para nao perder contraste, e marca-se pelo
+   sublinhado — WCAG 1.4.1: nao depender so da cor. */
+.error a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 /* ============================================
    RODAPÉ DIGNITUDE (institucional)
    ============================================ */
