@@ -310,7 +310,7 @@ async function renderRecompensaBanner() {
   const novas = total - getRecompensasVistas();
   if (novas > 0) {
     document.getElementById('recompensa-banner-text').textContent =
-      novas === 1 ? 'Tens 1 recompensa nova!' : `Tens ${novas} recompensas novas!`;
+      novas === 1 ? 'Tem 1 recompensa nova!' : `Tem ${novas} recompensas novas!`;
     banner.hidden = false;
   } else {
     banner.hidden = true;
@@ -427,7 +427,7 @@ function renderNiveis() {
   const todosFeitos = state.niveis.length > 0 && state.niveis.every(n => n.esgotado);
   const cap = document.querySelector('.niveis-intro .caption');
   if (cap) cap.textContent = todosFeitos
-    ? '🎉 Parabéns! Já respondeste a todas as perguntas de todos os níveis.'
+    ? '🎉 Parabéns! Já respondeu a todas as perguntas de todos os níveis.'
     : 'Toque num nível para começar.';
 }
 
@@ -462,7 +462,7 @@ async function startQuiz(nivel) {
   }
   state.questions = data || [];
   if (state.questions.length === 0) {
-    $('question-text').textContent = 'Já respondeste a todas as perguntas deste nível. 🎉';
+    $('question-text').textContent = 'Já respondeu a todas as perguntas deste nível. 🎉';
     $('options').innerHTML = '';
     $('feedback').hidden = true;
     $('quiz-next').hidden = true;
