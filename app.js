@@ -1545,10 +1545,14 @@ async function renderCalendarioDia() {
   const isFuture = _calSelected > todayIso;
 
   if (tomas.length === 0) {
-    const quando = (_calSelected === todayIso) ? 'para hoje' : 'para este dia';
-    const hint = isFuture
-      ? `Não há medicamentos agendados ${quando}. Toque em + para adicionar.`
-      : `Não há medicamentos registados ${quando}. Toque em + para adicionar.`;
+  let hint;
+    if (_calSelected === todayIso) {
+      hint = 'Não tem medicamentos para tomar hoje. Toque em + para adicionar.';
+    } else if (isFuture) {
+      hint = 'Não tem medicamentos agendados para este dia. Toque em + para adicionar.';
+    } else {
+      hint = 'Não tem medicamentos registados neste dia.';
+    }
     lista.innerHTML = `<li class="hoje-empty">${hint}</li>`;
     return;
   }
