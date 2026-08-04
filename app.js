@@ -765,15 +765,15 @@ async function loadConsentSection() {
   }
 }
 
-// Wire-up do botão "Retirar consentimento"
+// Wire-up do botao "Apagar os meus dados do sistema"
 (function bindConsentWithdraw() {
   function bind() {
     const btn = document.getElementById('perfil-consent-withdraw');
     if (!btn) return;
     btn.addEventListener('click', async () => {
       const confirmed = confirm(
-        'Vai retirar o seu consentimento e sair da app. Os resultados de quiz e recompensas deixam de estar associados a si. '
-        + 'Para apagar ou anonimizar totalmente os seus dados, contacte geral@dignitude.org. Quer continuar?'
+        'Ao apagar os seus dados do sistema, os resultados dos seus quizzes e respetivas '
+        + 'recompensas deixarão de estar associados a si. Pretende continuar?'
       );
       if (!confirmed) return;
       const pin = userNumber();
@@ -793,12 +793,12 @@ async function loadConsentSection() {
         } else {
           alert('Não foi possível processar o pedido. Tente novamente mais tarde.');
           btn.disabled = false;
-          btn.textContent = 'Retirar consentimento';
+          btn.textContent = 'Apagar os meus dados do sistema';
         }
       } catch (err) {
         alert('Erro ao processar o pedido: ' + (err.message || err));
         btn.disabled = false;
-        btn.textContent = 'Retirar consentimento';
+        btn.textContent = 'Apagar os meus dados do sistema';
       }
     });
   }
