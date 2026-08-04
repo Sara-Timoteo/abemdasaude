@@ -2391,7 +2391,18 @@ const TTS = {
   _utterance: null,
 
   isSupported() {
-    return 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+   return 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  },
+
+  _pickVoice() {
+    if (!this.isSupported()) return null;
+    let vozes = [];
+    try { vozes = window.speechSynthesis.getVoices() || []; } catch (e) { return null; }
+    if (!vozes.length) return null;
+    const norm = (v) => String(v.lang || '').replace('_', '-').toLowerCase();
+    return vozes.find(v => norm(v) === 'pt-pt')
+        || vozes.find(v => norm(v).indexOf('pt') === 0 && norm(v) !== 'pt-br')
+        || null;
   },
 
   toggle() {
@@ -2416,6 +2427,8 @@ const TTS = {
 
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'pt-PT';
+    const voz = this._pickVoice();
+    if (voz) u.voice = voz;
     u.rate = 1.0;
     u.pitch = 1.0;
     u.onend = () => { this.speaking = false; this._updateButton(); };
@@ -2470,7 +2483,8 @@ const TTS = {
 function bindTTS() {
   const btn = document.getElementById('tts-btn');
   if (!btn) return;
-  btn.addEventListener('click', () => TTS.toggle());
+ btn.addEventListener('click', () => TTS.toggle());
+  if ('speechSynthesis' in window) { try { window.speechSynthesis.getVoices(); } catch (e) {} }
 
   // Parar a leitura sempre que mudamos de view (a visibilidade muda via [hidden])
   const obs = new MutationObserver((mutations) => {
