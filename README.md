@@ -144,5 +144,4 @@ Dois avisos práticos:
 
 ## Estado
 
-Em testes, com dados de teste sob o prefixo `TESTE-`. O projeto acompanha uma
-comunicação à conferência **TEEM 2026**.
+Em testes, com dados de teste sob o prefixo `TESTE-`. 
