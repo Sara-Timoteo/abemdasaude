@@ -128,6 +128,7 @@ $$('.admin-nav__btn').forEach(btn => {
     if (sec === 'dashboard') await loadDashboard();
     else if (sec === 'utilizadores') await loadUtilizadores();
     else if (sec === 'pontuacoes') await loadPontuacoes();
+      else if (sec === 'ranking') await loadRanking();
     else if (sec === 'recompensas') await loadRecompensas();
   });
 });
@@ -600,6 +601,63 @@ async function applyPontuacoesFiltro() {
 }
 
 $('pontuacoes-filtro-nivel').addEventListener('change', applyPontuacoesFiltro);
+// ============================================
+// RANKING
+// ============================================
+
+async function loadRanking() {
+  const wrap = $('ranking-lista');
+  wrap.innerHTML = '<div class="loading">A carregar…</div>';
+
+  const { data, error } = await sb.rpc('get_ranking');
+
+  if (error) {
+    wrap.innerHTML = `<div class="error">Erro: ${escapeHTML(error.message)}</div>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    wrap.innerHTML = '<div class="empty">Ainda sem beneficiários com tentativas registadas.</div>';
+    return;
+  }
+  renderRanking(data);
+}
+
+function renderRanking(rows) {
+  const wrap = $('ranking-lista');
+  wrap.innerHTML = `
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Beneficiário</th>
+          <th class="num">Níveis</th>
+          <th class="num">Média</th>
+          <th class="num">Tentativas</th>
+          <th class="num">Pontos</th>
+          <th class="num">Recompensas</th>
+          <th>Última tentativa</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(r => `
+          <tr class="clickable" data-numero="${escapeHTML(r.numero_beneficiario)}">
+            <td class="num">${r.posicao}</td>
+            <td><strong>${escapeHTML(r.numero_beneficiario)}</strong></td>
+            <td class="num">${r.niveis_concluidos}</td>
+            <td class="num">${r.media_percentagem == null ? '—' : Number(r.media_percentagem).toFixed(1) + '%'}</td>
+            <td class="num">${r.total_tentativas}</td>
+            <td class="num">${r.total_pontos}</td>
+            <td class="num">${r.total_recompensas}</td>
+            <td>${formatDateShort(r.ultima_tentativa)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+  wrap.querySelectorAll('tr.clickable').forEach(tr => {
+    tr.addEventListener('click', () => goToDetalheUtilizador(tr.dataset.numero));
+  });
+}
 
 // ============================================
 // RECOMPENSAS (todas)
