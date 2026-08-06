@@ -997,3 +997,15 @@ body { padding-bottom: 66px; }
   body { padding-bottom: 48px; }
   .tts-btn { bottom: 62px; }
 }
+
+/* Tabela alta com scroll próprio — usada no Ranking, que não trunca a lista */
+.admin-table-wrap--alto {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.admin-table-wrap--alto .admin-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface, #fff);
+}
