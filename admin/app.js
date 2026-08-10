@@ -128,7 +128,7 @@ $$('.admin-nav__btn').forEach(btn => {
     if (sec === 'dashboard') await loadDashboard();
     else if (sec === 'utilizadores') await loadUtilizadores();
     else if (sec === 'pontuacoes') await loadPontuacoes();
-      else if (sec === 'ranking') await loadRanking();
+   else if (sec === 'ranking') await loadRanking();
     else if (sec === 'recompensas') await loadRecompensas();
   });
 });
