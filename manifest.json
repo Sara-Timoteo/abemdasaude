@@ -1,6 +1,6 @@
 {
-  "name": "Mais Saúde · abem:",
-  "short_name": "Mais Saúde",
+  "name": "abem: da Saúde",
+  "short_name": "abem: Saúde",
   "description": "Quiz educativo sobre saúde e medicamentos do programa abem: (Rede Solidária do Medicamento, Dignitude).",
   "start_url": "./",
   "scope": "./",
