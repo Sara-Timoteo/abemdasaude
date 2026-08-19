@@ -1,5 +1,5 @@
 /* ============================================================
-   Quiz Mais Saúde — At-rest encryption helpers (Web Crypto API).
+   abem: da Saúde — At-rest encryption helpers (Web Crypto API).
    
    Carregar antes do app.js:
    <script src="./crypto.js"></script>
