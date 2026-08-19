@@ -1,5 +1,5 @@
 /* ============================================================
-   Quiz Mais Saúde — Consent flow.
+   abem: da Saúde — Consent flow.
    
    Funções:
      QMSConsent.ensureConsent(pin, sb)  → record (ou null se recusou)
