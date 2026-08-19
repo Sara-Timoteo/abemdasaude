@@ -1,4 +1,4 @@
-/* Service Worker — Quiz Mais Saúde
+/* Service Worker — abem: da Saúde
    Estratégia: REDE PRIMEIRO para conteúdo próprio (HTML/JS/CSS) — mostra sempre a
    versão nova quando há internet; a cache só serve de reserva quando estás offline.
    Assim NÃO é preciso mudar a versão a cada deploy.
