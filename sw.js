@@ -6,7 +6,7 @@
    em stale-while-revalidate para o quiz funcionar offline; fontes/CDN vão sempre à rede.
 */
 
-const CACHE_NAME = 'quiz-mais-saude-v19';
+const CACHE_NAME = 'quiz-mais-saude-v20';
 const ASSETS = [
   './',
   './index.html',
@@ -15,7 +15,7 @@ const ASSETS = [
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-  './assets/abem-logo.png',
+  './assets/abem-logo.svg',
   './assets/dignitude-logo.png',
 ];
 
