@@ -3,7 +3,7 @@
 // versão nova quando há internet; a cache só serve de reserva quando estás offline.
 // Assim NÃO é preciso mudar a versão a cada deploy.
 
-const CACHE_NAME = 'abem-admin-v6';
+const CACHE_NAME = 'abem-admin-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -12,7 +12,7 @@ const ASSETS = [
   './manifest.json',
   '../icon-192.png',
   '../icon-512.png',
-  '../assets/abem-logo.png',
+  '../assets/abem-logo.svg',
 ];
 
 self.addEventListener('install', (event) => {
