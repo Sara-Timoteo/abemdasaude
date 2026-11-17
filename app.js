@@ -918,7 +918,7 @@ function renderPerfilNotif() {
   }
 
   if (enabled) {
-    statusEl.textContent = 'Activas';
+    statusEl.textContent = 'Ativas';
     statusEl.className = 'perfil-notif__status perfil-notif__status--on';
     btn.hidden = false;
     btn.textContent = 'Desativar';
