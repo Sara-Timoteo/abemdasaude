@@ -1707,7 +1707,7 @@ function showMedFormError(msg) {
 
 $('med-form-delete').addEventListener('click', async () => {
   if (!_editingTomaId) return;
-  if (!confirm('Apagar esta toma? Esta acção não pode ser desfeita.')) return;
+  if (!confirm('Apagar esta toma? Esta ação não pode ser desfeita.')) return;
   try {
     await Store.deleteToma(_editingTomaId);
     invalidateMedCaches();
